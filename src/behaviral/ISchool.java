@@ -1,5 +1,6 @@
 package behaviral;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public interface ISchool<T> {
@@ -7,7 +8,7 @@ public interface ISchool<T> {
 
     T input();
 
-    void add(ArrayList<T> list);
+    void add(ArrayList<T> list) throws IOException;
 
     void edit(ArrayList<T> list);
 

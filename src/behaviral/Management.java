@@ -2,23 +2,27 @@ package behaviral;
 
 import creat.Mark;
 import creat.Student;
-import myFile.FileObject;
-import myFile.FileObject;
+import myFile.FileCSV;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Management extends AbsManagement {
     transient Scanner sc = new Scanner(System.in);
 
-    FileObject fileObj = new FileObject();
+    FileCSV fileCSV = new FileCSV();
 
     Regex match = new Regex();
 
-    ArrayList<Student> studentArrayList = new ArrayList<>();
+    ArrayList<Student> studentArrayList;
 
     ArrayList<Integer> idLists = new ArrayList<>();
-    //    ArrayList<Student> scholarship = new ArrayList<>();
-    ArrayList<Student> studentArrayList = fileObj.readObj(new ArrayList<Student>()) == null ? new ArrayList<>() : fileObj.readObj(new ArrayList<Student>());
+
+    ArrayList<Student> scholarship = new ArrayList<>();
+
+    public Management() throws IOException {
+        studentArrayList = fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH));
+    }
 
     @Override
     public Student input() {
@@ -26,7 +30,7 @@ public class Management extends AbsManagement {
         String regex;
 
         System.out.println("Enter the name");
-        regex = "^[]{1,}$";
+        regex = "^[a-zA-Z0-9]*$";
         String name = sc.nextLine();
         if (matchInput(regex, name)) {
             newStudent.setName(name);
@@ -50,7 +54,7 @@ public class Management extends AbsManagement {
 
         System.out.println("Enter the id");
         String id = sc.nextLine();
-        if (matchId(idLists, id)){
+        if (matchId(idLists, id)) {
             newStudent.setId(id);
         }
 
@@ -74,8 +78,7 @@ public class Management extends AbsManagement {
     }
 
     @Override
-    public void add(ArrayList<Student> list) {
-        fileObj.writerObj(list);
+    public void add(ArrayList<Student> list) throws IOException {
 
         System.out.println("Enter the quantity want to add");
         int quantity = Integer.parseInt(sc.nextLine());
@@ -86,9 +89,8 @@ public class Management extends AbsManagement {
         }
         sort(list);
         show(list);
-//        fileObj.writerObj(list);
-        fileObj.readObj(list);
 
+        fileCSV.writer(fileCSV.FILE_PATH, list);
     }
 
     public boolean matchId(ArrayList<Integer> listId, String id) {
@@ -98,7 +100,7 @@ public class Management extends AbsManagement {
             if (match.only(listId, item)) {
                 check = true;
                 return true;
-            }else {
+            } else {
                 System.err.println("The id had exits...invited enter to repeat");
             }
         } while (check);
@@ -107,7 +109,6 @@ public class Management extends AbsManagement {
 
     @Override
     public void edit(ArrayList<Student> list) {
-//        fileObj.readObj(list);
 
         System.out.println("Enter the id want to edit");
         String id = sc.nextLine();
@@ -119,14 +120,11 @@ public class Management extends AbsManagement {
             }
         }
         show(list);
-        fileObj.readObj(list);
 
-//        fileObj.writerObj(list);
     }
 
     @Override
     public void delete(ArrayList<Student> list) {
-//        fileObj.readObj(list);
 
         System.out.println("Enter the id want to edit");
         String id = sc.nextLine();
@@ -138,9 +136,7 @@ public class Management extends AbsManagement {
             }
         }
         show(list);
-        fileObj.readObj(list);
 
-//        fileObj.writerObj(list);
     }
 
     @Override
@@ -168,12 +164,12 @@ public class Management extends AbsManagement {
 
     @Override
     public void sort(ArrayList<Student> list) {
-        float min = list.get(0).getMark().getAverage();
+        float min = list.get(0).getMark();
         Student temp;
 
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = i + 1; j < list.size(); j++) {
-                float next = list.get(j).getMark().getAverage();
+                float next = list.get(j).getMark();
                 if (next < min) {
                     temp = list.get(i);
                     list.set(i, list.get(j));
@@ -187,7 +183,7 @@ public class Management extends AbsManagement {
     public void checkScholarship(ArrayList<Student> list, ArrayList<Student> scholarship) {
 
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getMark().getAverage() >= SCHOLARSHIP) {
+            if (list.get(i).getMark() >= SCHOLARSHIP) {
                 scholarship.add(list.get(i));
             }
         }
@@ -195,9 +191,9 @@ public class Management extends AbsManagement {
     }
 
     @Override
-    public Mark inputMark() {
+    public float inputMark() {
         Mark newMark = new Mark();
-        float sum = 0;
+        float sum;
 
         System.out.println("Enter the Math");
         newMark.setMath(Float.parseFloat(sc.nextLine()));
@@ -220,7 +216,7 @@ public class Management extends AbsManagement {
         sum = (newMark.getMath() + newMark.getBiology() + newMark.getChemistry() + newMark.getComputer() + newMark.getPhysics() + newMark.getEnglish()) / 6;
         newMark.setAverage(sum);
 
-        return newMark;
+        return sum;
     }
 
     public void editMark(ArrayList<Student> list) {
@@ -235,7 +231,7 @@ public class Management extends AbsManagement {
         }
     }
 
-    public void menu() {
+    public void menu() throws IOException {
         int choice;
         do {
             System.out.println("Menu:" +

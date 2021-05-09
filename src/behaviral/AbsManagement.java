@@ -4,6 +4,7 @@ import behaviral.ISchool;
 import creat.Mark;
 import creat.Student;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class AbsManagement implements ISchool<Student> {
@@ -13,7 +14,7 @@ public abstract class AbsManagement implements ISchool<Student> {
     }
 
     @Override
-    public void add(ArrayList<Student> list) {
+    public void add(ArrayList<Student> list) throws IOException {
 
     }
 
@@ -39,7 +40,7 @@ public abstract class AbsManagement implements ISchool<Student> {
     public void checkScholarship(ArrayList<Student>list, ArrayList<Student> scholarship){
     }
 
-    public Mark inputMark(){
-        return null;
+    public float inputMark(){
+        return 0;
     }
 }

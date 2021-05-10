@@ -1,1 +1,1 @@
-1,2,3,4,5,6,7
+Student{name='a', birthday='09-09-0909', address='hn', gender='nam',email='a@gmail.com', id='null', mark=9.0}

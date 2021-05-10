@@ -57,15 +57,15 @@ public class Management extends AbsManagement {
             newStudent.setEmail(email);
         }
 
-            System.out.println("Enter the id");
-            String id = sc.nextLine();
-            boolean check = false;
-            do {
-                if (regex.onlyId(idLists, id)){
-                    newStudent.setId(id);
-                    check = true;
-                }
-            }while (check);
+        System.out.println("Enter the id");
+        String id;
+        do {
+            id = sc.nextLine();
+            if (regex.onlyId(idLists, id)) {
+                newStudent.setId(id);
+                break;
+            }
+        } while (regex.onlyId(idLists, id) == false);
 
 
         System.err.println("Enter the mark");

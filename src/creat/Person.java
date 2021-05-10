@@ -56,6 +56,6 @@ public class Person implements Serializable {
                 ", birthday='" + birthday + '\'' +
                 ", address='" + address + '\'' +
                 ", gender='" + gender + '\'' +
-                '}';
+                ',';
     }
 }

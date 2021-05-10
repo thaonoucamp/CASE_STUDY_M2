@@ -19,25 +19,25 @@ public abstract class AbsManagement implements ISchool<Student> {
     }
 
     @Override
-    public void edit(ArrayList<Student> list) {
+    public void edit(ArrayList<Student> list) throws IOException {
 
     }
 
     @Override
-    public void delete(ArrayList<Student> list) {
+    public void delete(ArrayList<Student> list) throws IOException {
 
     }
 
     public void find(ArrayList<Student> list) {
     }
 
-    public void show(ArrayList<Student> list) {
+    public void show(ArrayList<Student> list) throws IOException {
     }
 
-    public void sort(ArrayList<Student> list) {
+    public void sort(ArrayList<Student> list) throws IOException {
     }
 
-    public void checkScholarship(ArrayList<Student>list, ArrayList<Student> scholarship){
+    public void checkScholarship(ArrayList<Student>list, ArrayList<Student> scholarship) throws IOException {
     }
 
     public float inputMark(){

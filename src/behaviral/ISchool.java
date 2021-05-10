@@ -10,8 +10,8 @@ public interface ISchool<T> {
 
     void add(ArrayList<T> list) throws IOException;
 
-    void edit(ArrayList<T> list);
+    void edit(ArrayList<T> list) throws IOException;
 
-    void delete(ArrayList<T> list);
+    void delete(ArrayList<T> list) throws IOException;
 
 }

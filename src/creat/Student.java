@@ -5,9 +5,6 @@ public class Student extends Person {
     private String id;
     private float mark;
 
-    public Student() {
-    }
-
     public Student(String email, String id, float mark) {
         this.email = email;
         this.id = id;
@@ -19,6 +16,10 @@ public class Student extends Person {
         this.email = email;
         this.id = id;
         this.mark = mark;
+    }
+
+    public Student() {
+
     }
 
     public String getEmail() {
@@ -47,7 +48,7 @@ public class Student extends Person {
 
     @Override
     public String toString() {
-        return "Student{" +
+        return "Student{" + super.toString() +
                 "email='" + email + '\'' +
                 ", id='" + id + '\'' +
                 ", mark=" + mark +

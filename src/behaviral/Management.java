@@ -6,17 +6,19 @@ import myFile.FileCSV;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Management extends AbsManagement {
     transient Scanner sc = new Scanner(System.in);
 
     FileCSV fileCSV = new FileCSV();
 
-    Regex match = new Regex();
-
-    ArrayList<Student> studentArrayList;
+    Regex regex = new Regex();
 
     ArrayList<Integer> idLists = new ArrayList<>();
+
+    ArrayList<Student> studentArrayList;
 
     ArrayList<Student> scholarship = new ArrayList<>();
 
@@ -27,19 +29,18 @@ public class Management extends AbsManagement {
     @Override
     public Student input() {
         Student newStudent = new Student();
-        String regex;
 
         System.out.println("Enter the name");
-        regex = "^[a-zA-Z0-9]*$";
+        String regexName = "^[a-zA-Z]*$";
         String name = sc.nextLine();
-        if (matchInput(regex, name)) {
+        if (regex.matches(regexName, name)) {
             newStudent.setName(name);
         }
 
         System.out.println("Enter the birthday");
-        regex = "^[0-9]{2}[/|-]{1}[0-9]{2}[/|-]{1}[0-9]{4}$";
+        String regexBorn = "^[0-9]{2}[/|-]{1}[0-9]{2}[/|-]{1}[0-9]{4}$";
         String birthday = sc.nextLine();
-        if (matchInput(regex, birthday)) {
+        if (regex.matches(regexBorn, birthday)) {
             newStudent.setBirthday(birthday);
         }
 
@@ -50,31 +51,28 @@ public class Management extends AbsManagement {
         newStudent.setGender(sc.nextLine());
 
         System.out.println("Enter the email");
-        newStudent.setEmail(sc.nextLine());
-
-        System.out.println("Enter the id");
-        String id = sc.nextLine();
-        if (matchId(idLists, id)) {
-            newStudent.setId(id);
+        String regexMail = "^[a-zA-Z0-9]*[\\@]+[a-zA-Z0-9]*[\\.][a-z]*$";
+        String email = sc.nextLine();
+        if (regex.matches(regexMail, email)) {
+            newStudent.setEmail(email);
         }
 
-        System.out.println("Enter the mark");
+            System.out.println("Enter the id");
+            String id = sc.nextLine();
+            boolean check = false;
+            do {
+                if (regex.onlyId(idLists, id)){
+                    newStudent.setId(id);
+                    check = true;
+                }
+            }while (check);
+
+
+        System.err.println("Enter the mark");
         newStudent.setMark(inputMark());
 
         return newStudent;
 
-    }
-
-    public boolean matchInput(String regex, String every) {
-        boolean check = false;
-        do {
-            every = sc.nextLine();
-            if (match.matches(regex, every)) {
-                check = true;
-                return true;
-            }
-        } while (check);
-        return false;
     }
 
     @Override
@@ -93,22 +91,9 @@ public class Management extends AbsManagement {
         fileCSV.writer(fileCSV.FILE_PATH, list);
     }
 
-    public boolean matchId(ArrayList<Integer> listId, String id) {
-        int item = Integer.parseInt(id);
-        boolean check = false;
-        do {
-            if (match.only(listId, item)) {
-                check = true;
-                return true;
-            } else {
-                System.err.println("The id had exits...invited enter to repeat");
-            }
-        } while (check);
-        return false;
-    }
-
     @Override
-    public void edit(ArrayList<Student> list) {
+    public void edit(ArrayList<Student> list) throws IOException {
+        fileCSV.reader(fileCSV.FILE_PATH);
 
         System.out.println("Enter the id want to edit");
         String id = sc.nextLine();
@@ -120,11 +105,13 @@ public class Management extends AbsManagement {
             }
         }
         show(list);
+        fileCSV.writer(fileCSV.FILE_PATH, list);
 
     }
 
     @Override
-    public void delete(ArrayList<Student> list) {
+    public void delete(ArrayList<Student> list) throws IOException {
+        fileCSV.reader(fileCSV.FILE_PATH);
 
         System.out.println("Enter the id want to edit");
         String id = sc.nextLine();
@@ -136,6 +123,7 @@ public class Management extends AbsManagement {
             }
         }
         show(list);
+        fileCSV.writer(fileCSV.FILE_PATH, list);
 
     }
 
@@ -153,7 +141,7 @@ public class Management extends AbsManagement {
     }
 
     @Override
-    public void show(ArrayList<Student> list) {
+    public void show(ArrayList<Student> list) throws IOException {
         sort(list);
 
         for (Student s :
@@ -163,7 +151,7 @@ public class Management extends AbsManagement {
     }
 
     @Override
-    public void sort(ArrayList<Student> list) {
+    public void sort(ArrayList<Student> list) throws IOException {
         float min = list.get(0).getMark();
         Student temp;
 
@@ -177,10 +165,12 @@ public class Management extends AbsManagement {
                 }
             }
         }
+        fileCSV.writer(fileCSV.FILE_PATH, list);
+
     }
 
     @Override
-    public void checkScholarship(ArrayList<Student> list, ArrayList<Student> scholarship) {
+    public void checkScholarship(ArrayList<Student> list, ArrayList<Student> scholarship) throws IOException {
 
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getMark() >= SCHOLARSHIP) {
@@ -193,7 +183,6 @@ public class Management extends AbsManagement {
     @Override
     public float inputMark() {
         Mark newMark = new Mark();
-        float sum;
 
         System.out.println("Enter the Math");
         newMark.setMath(Float.parseFloat(sc.nextLine()));
@@ -213,13 +202,14 @@ public class Management extends AbsManagement {
         System.out.println("Enter the computer");
         newMark.setComputer(Float.parseFloat(sc.nextLine()));
 
-        sum = (newMark.getMath() + newMark.getBiology() + newMark.getChemistry() + newMark.getComputer() + newMark.getPhysics() + newMark.getEnglish()) / 6;
+        float sum = (newMark.getMath() + newMark.getBiology() + newMark.getChemistry()
+                + newMark.getComputer() + newMark.getPhysics() + newMark.getEnglish()) / 6;
         newMark.setAverage(sum);
 
         return sum;
     }
 
-    public void editMark(ArrayList<Student> list) {
+    public void editMark(ArrayList<Student> list) throws IOException {
         System.out.println("Enter the id want to edit of mark");
         String id = sc.nextLine();
 
@@ -229,6 +219,8 @@ public class Management extends AbsManagement {
                 break;
             }
         }
+        fileCSV.writer(fileCSV.FILE_PATH, list);
+
     }
 
     public void menu() throws IOException {

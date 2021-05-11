@@ -11,8 +11,6 @@ public class Regex {
         matcher.matches();
         if (matcher.matches()) {
             return true;
-        } else {
-            System.err.println("Enter to repeat the property ");
         }
         return false;
     }

@@ -4,6 +4,7 @@ import creat.Mark;
 import creat.Student;
 import myFile.FileCSV;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -16,11 +17,13 @@ public class Management extends AbsManagement {
 
     Regex regex = new Regex();
 
-    ArrayList<Integer> idLists = new ArrayList<>();
+    ArrayList<Integer> idLists = fileCSV.readId(new File(fileCSV.FILE_ID)) == null
+            ? new ArrayList<>() : fileCSV.readId(new File(fileCSV.FILE_ID));
 
     ArrayList<Student> studentArrayList;
 
     ArrayList<Student> scholarship = new ArrayList<>();
+
 
     public Management() throws IOException {
         studentArrayList = fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH)) == null ?
@@ -32,18 +35,23 @@ public class Management extends AbsManagement {
         Student newStudent = new Student();
 
         System.out.println("Enter the name");
-        String regexName = "^[a-zA-Z]*$";
         String name = sc.nextLine();
-        if (regex.matches(regexName, name)) {
-            newStudent.setName(name);
-        }
+        newStudent.setName(name);
 
         System.out.println("Enter the birthday");
         String regexBorn = "^[0-9]{2}[/|-]{1}[0-9]{2}[/|-]{1}[0-9]{4}$";
-        String birthday = sc.nextLine();
-        if (regex.matches(regexBorn, birthday)) {
-            newStudent.setBirthday(birthday);
-        }
+        String birthday;
+        boolean checkBorn = true;
+        do {
+            birthday = sc.nextLine();
+            if (regex.matches(regexBorn, birthday)) {
+                newStudent.setBirthday(birthday);
+                checkBorn = false;
+            } else {
+                System.err.println("Enter repeat the birthday");
+            }
+        } while (checkBorn);
+
 
         System.out.println("Enter the address");
         newStudent.setAddress(sc.nextLine());
@@ -53,28 +61,34 @@ public class Management extends AbsManagement {
 
         System.out.println("Enter the email");
         String regexMail = "^[a-zA-Z0-9]*[\\@]+[a-zA-Z0-9]*[\\.][a-z]*$";
-        String email = sc.nextLine();
-        if (regex.matches(regexMail, email)) {
-            newStudent.setEmail(email);
-        }
+        String email;
+        boolean checkMail = true;
+        do {
+            email = sc.nextLine();
+            if (regex.matches(regexMail, email)) {
+                newStudent.setEmail(email);
+                checkMail = false;
+            } else {
+                System.err.println("Enter repeat the mail");
+            }
+        } while (checkMail);
 
         System.out.println("Enter the id");
         String id;
-        boolean check = true;
+        boolean checkId = true;
         do {
             id = sc.nextLine();
             if (regex.onlyId(idLists, id)) {
                 newStudent.setId(id);
-                check = false;
+                checkId = false;
             }
-        } while (check);
-
+            System.err.println("The id had existed");
+        } while (checkId);
 
         System.err.println("Enter the mark");
         newStudent.setMark(inputMark());
 
         return newStudent;
-
     }
 
     @Override
@@ -154,10 +168,9 @@ public class Management extends AbsManagement {
 
     @Override
     public void sort(ArrayList<Student> list) throws IOException {
-        float min = list.get(0).getMark();
-        Student temp;
-
         for (int i = 0; i < list.size() - 1; i++) {
+            float min = list.get(0).getMark();
+            Student temp;
             for (int j = i + 1; j < list.size(); j++) {
                 float next = list.get(j).getMark();
                 if (next < min) {
@@ -167,8 +180,6 @@ public class Management extends AbsManagement {
                 }
             }
         }
-        fileCSV.writer(fileCSV.FILE_PATH, list);
-
     }
 
     @Override

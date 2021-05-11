@@ -10,11 +10,10 @@ public class FileCSV {
 
     public void writer(String filePath, ArrayList<Student> list) throws IOException {
         FileWriter fw = new FileWriter(new File(filePath));
-
         for (Student s : list) {
-            fw.write(s.toString() + "\n");
+            fw.write(s.getName() + "," + s.getBirthday() + "," + s.getAddress() + ","
+                    + s.getGender() + "," + s.getEmail() + "," + s.getId() + "," + s.getMark() + "\n");
         }
-
         fw.close();
     }
 
@@ -34,19 +33,19 @@ public class FileCSV {
         return result;
     }
 
-    public ArrayList<Student> swapCSV(String filePath) {
+    public ArrayList<Student> swapCSV(String content) {
         ArrayList<Student> lists = new ArrayList<>();
 
-        String[] students = filePath.split("\n");
-        if (students.length != 0) {
-            for (int i = 0; i < students.length; i++) {
-                String studentItem = students[i];
-                String[] elements = studentItem.split(",");
-
+        String[] students = content.split("\n");
+        for (int i = 0; i < students.length; i++) {
+            String studentItem = students[i];
+            String[] elements = studentItem.split(",");
+            if (elements.length == 7) {
                 lists.add(new Student(elements[0], elements[1], elements[2],
                         elements[3], elements[4], elements[5], Float.parseFloat(elements[6])));
             }
         }
+
         return lists;
     }
 }

@@ -1,1 +1,1 @@
-Student{name='a', birthday='09-09-0909', address='hn', gender='nam',email='a@gmail.com', id='null', mark=9.0}
+a,09-09-0000,hn,nam,a@gmail.com,1,24.0

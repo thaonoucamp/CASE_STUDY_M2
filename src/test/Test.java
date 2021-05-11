@@ -9,7 +9,7 @@ public class Test {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String item = sc.nextLine();
-        ArrayList<Integer> test = new ArrayList<Integer>();
+        ArrayList<Integer> test = new ArrayList<>();
         Regex regex = new Regex();
         test.add(1);
         regex.onlyId(test, item);

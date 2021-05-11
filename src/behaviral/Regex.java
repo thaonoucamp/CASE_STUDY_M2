@@ -24,12 +24,12 @@ public class Regex {
             return true;
         } else {
             for (int i = 0; i < idLists.size(); i++) {
-                if (idLists.get(i) != checkId) {
-                    idLists.add(checkId);
+                if (idLists.get(i) == checkId) {
                     return false;
                 }
             }
+            idLists.add(checkId);
+            return true;
         }
-        return false;
     }
 }

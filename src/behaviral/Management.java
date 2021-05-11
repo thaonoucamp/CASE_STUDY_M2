@@ -23,7 +23,8 @@ public class Management extends AbsManagement {
     ArrayList<Student> scholarship = new ArrayList<>();
 
     public Management() throws IOException {
-        studentArrayList = fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH));
+        studentArrayList = fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH)) == null ?
+                new ArrayList<>() : fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH));
     }
 
     @Override
@@ -59,13 +60,14 @@ public class Management extends AbsManagement {
 
         System.out.println("Enter the id");
         String id;
+        boolean check = true;
         do {
             id = sc.nextLine();
             if (regex.onlyId(idLists, id)) {
                 newStudent.setId(id);
-                break;
+                check = false;
             }
-        } while (regex.onlyId(idLists, id) == false);
+        } while (check);
 
 
         System.err.println("Enter the mark");

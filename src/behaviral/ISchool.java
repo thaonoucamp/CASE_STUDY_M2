@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public interface ISchool<T> {
     float SCHOLARSHIP = 9.0f;
 
-    T input();
+    T input() throws IOException;
 
     void add(ArrayList<T> list) throws IOException;
 

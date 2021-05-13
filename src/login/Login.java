@@ -14,8 +14,8 @@ public class Login {
     public String[] creatLogin() {
         String[] loginAccount = new String[2];
         Account account = new Account();
-
-        System.out.print("USER: ");
+        System.out.println("LOGIN ACCOUNT");
+        System.out.print("user name: ");
         String regexUser = "^[a-zA-Z0-9]*$";
         String user = sc.nextLine();
         boolean checkUser = true;
@@ -29,7 +29,7 @@ public class Login {
             }
         } while (checkUser);
 
-        System.out.print("PASSWORD: ");
+        System.out.print("password: ");
         String regexPass = "^[0-9]{8}*$";
         String pass = sc.nextLine();
 

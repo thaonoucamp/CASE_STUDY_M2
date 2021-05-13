@@ -3,6 +3,7 @@ package behaviral;
 import creat.Mark;
 import creat.Student;
 import myFile.FileCSV;
+import myFile.FileObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,13 +18,10 @@ public class Management extends AbsManagement {
 
     Regex regex = new Regex();
 
-    ArrayList<Integer> idLists = fileCSV.readId(new File(fileCSV.FILE_ID)) == null
-            ? new ArrayList<>() : fileCSV.readId(new File(fileCSV.FILE_ID));
-
     ArrayList<Student> studentArrayList;
 
-    ArrayList<Student> scholarship = new ArrayList<>();
-
+    ArrayList<String> listId = (ArrayList<String>) FileObject.readFromFile(FileObject.FILE_ID) == null ?
+            new ArrayList<>() : (ArrayList<String>) FileObject.readFromFile(FileObject.FILE_ID);
 
     public Management() throws IOException {
         studentArrayList = fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH)) == null ?
@@ -31,7 +29,8 @@ public class Management extends AbsManagement {
     }
 
     @Override
-    public Student input() {
+    public Student input() throws IOException {
+
         Student newStudent = new Student();
 
         System.out.println("Enter the name");
@@ -74,21 +73,35 @@ public class Management extends AbsManagement {
         } while (checkMail);
 
         System.out.println("Enter the id");
-        String id;
         boolean checkId = true;
         do {
-            id = sc.nextLine();
-            if (regex.onlyId(idLists, id)) {
+            String id = sc.nextLine();
+            if (onlyId(listId, id)) {
                 newStudent.setId(id);
                 checkId = false;
             }
-            System.err.println("The id had existed");
         } while (checkId);
 
-        System.err.println("Enter the mark");
         newStudent.setMark(inputMark());
 
         return newStudent;
+    }
+
+    public boolean onlyId(ArrayList<String> list, String id) {
+        if (list == null){
+            list.add(id);
+            return true;
+        }else {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).equals(id)) {
+                    return false;
+                } else {
+                    list.add(id);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -104,7 +117,7 @@ public class Management extends AbsManagement {
         sort(list);
         show(list);
 
-        fileCSV.writer(fileCSV.FILE_PATH, list);
+        fileCSV.writer(fileCSV.FILE_PATH, studentArrayList);
     }
 
     @Override
@@ -121,7 +134,7 @@ public class Management extends AbsManagement {
             }
         }
         show(list);
-        fileCSV.writer(fileCSV.FILE_PATH, list);
+        fileCSV.writer(fileCSV.FILE_PATH, studentArrayList);
 
     }
 
@@ -129,7 +142,7 @@ public class Management extends AbsManagement {
     public void delete(ArrayList<Student> list) throws IOException {
         fileCSV.reader(fileCSV.FILE_PATH);
 
-        System.out.println("Enter the id want to edit");
+        System.out.println("Enter the id want to delete");
         String id = sc.nextLine();
 
         for (int i = 0; i < list.size(); i++) {
@@ -139,7 +152,7 @@ public class Management extends AbsManagement {
             }
         }
         show(list);
-        fileCSV.writer(fileCSV.FILE_PATH, list);
+        fileCSV.writer(fileCSV.FILE_PATH, studentArrayList);
 
     }
 
@@ -159,7 +172,6 @@ public class Management extends AbsManagement {
     @Override
     public void show(ArrayList<Student> list) throws IOException {
         sort(list);
-
         for (Student s :
                 list) {
             System.out.println(s);
@@ -168,29 +180,26 @@ public class Management extends AbsManagement {
 
     @Override
     public void sort(ArrayList<Student> list) throws IOException {
-        for (int i = 0; i < list.size() - 1; i++) {
-            float min = list.get(0).getMark();
-            Student temp;
-            for (int j = i + 1; j < list.size(); j++) {
-                float next = list.get(j).getMark();
-                if (next < min) {
-                    temp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                float min = list.get(j).getMark();
+                float max = list.get(j - 1).getMark();
+                if (min > max) {
+                    Student temp = list.get(j);
+                    list.set(j, list.get(j - 1));
+                    list.set(j - 1, temp);
                 }
             }
         }
     }
 
     @Override
-    public void checkScholarship(ArrayList<Student> list, ArrayList<Student> scholarship) throws IOException {
-
+    public void checkScholarship(ArrayList<Student> list) throws IOException {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getMark() >= SCHOLARSHIP) {
-                scholarship.add(list.get(i));
+                System.out.println(list.get(i));
             }
         }
-        show(scholarship);
     }
 
     @Override
@@ -232,14 +241,15 @@ public class Management extends AbsManagement {
                 break;
             }
         }
-        fileCSV.writer(fileCSV.FILE_PATH, list);
+        fileCSV.writer(fileCSV.FILE_PATH, studentArrayList);
 
     }
 
     public void menu() throws IOException {
         int choice;
         do {
-            System.out.println("Menu:" +
+            System.out.println("-----------------------" +
+                    "\nMenu:" +
                     "\n1. ADD" +
                     "\n2. EDIT" +
                     "\n3. DELETE" +
@@ -264,7 +274,7 @@ public class Management extends AbsManagement {
                     find(studentArrayList);
                     break;
                 case 5:
-                    checkScholarship(studentArrayList, scholarship);
+                    checkScholarship(studentArrayList);
                     break;
                 case 6:
                     show(studentArrayList);

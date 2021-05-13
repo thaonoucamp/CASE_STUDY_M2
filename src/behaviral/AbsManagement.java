@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public abstract class AbsManagement implements ISchool<Student> {
     @Override
-    public Student input() {
+    public Student input() throws IOException {
         return null;
     }
 
@@ -37,7 +37,7 @@ public abstract class AbsManagement implements ISchool<Student> {
     public void sort(ArrayList<Student> list) throws IOException {
     }
 
-    public void checkScholarship(ArrayList<Student>list, ArrayList<Student> scholarship) throws IOException {
+    public void checkScholarship(ArrayList<Student>list) throws IOException {
     }
 
     public float inputMark(){

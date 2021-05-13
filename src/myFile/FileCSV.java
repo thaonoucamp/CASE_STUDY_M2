@@ -6,7 +6,6 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class FileCSV {
-    public String FILE_ID = "/Users/thaodangxuan/IdeaProjects/CASE_STUDY_M2/src/myFile/id.txt";
     public String FILE_PATH = "/Users/thaodangxuan/IdeaProjects/CASE_STUDY_M2/src/myFile/student.txt";
 
     public void writer(String filePath, ArrayList<Student> list) throws IOException {
@@ -48,26 +47,5 @@ public class FileCSV {
             }
         }
         return lists;
-    }
-
-    public void writerId(ArrayList<Integer> listId, File filePath) throws IOException {
-        FileWriter fileWriter = new FileWriter(new File(String.valueOf(filePath)));
-
-        for (int i : listId) {
-            fileWriter.write(i);
-        }
-        fileWriter.close();
-    }
-
-    public ArrayList<Integer> readId(File filePath) throws IOException {
-        ArrayList<Integer> list = new ArrayList<>();
-        FileReader reader = new FileReader(new File(String.valueOf(filePath)));
-        int item;
-        while ((item = reader.read()) != -1) {
-            item = reader.read();
-            list.add(item);
-        }
-        reader.close();
-        return list;
     }
 }

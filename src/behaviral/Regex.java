@@ -1,5 +1,7 @@
 package behaviral;
 
+import creat.Student;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,21 +15,5 @@ public class Regex {
             return true;
         }
         return false;
-    }
-
-    public boolean onlyId(ArrayList<Integer> idLists, String id) {
-        int checkId = Integer.parseInt(id);
-        if (idLists == null) {
-            idLists.add(checkId);
-            return true;
-        } else {
-            for (int i = 0; i < idLists.size(); i++) {
-                if (idLists.get(i) == checkId) {
-                    return false;
-                }
-            }
-            idLists.add(checkId);
-            return true;
-        }
     }
 }

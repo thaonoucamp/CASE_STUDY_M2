@@ -20,9 +20,6 @@ public class Management extends AbsManagement {
 
     ArrayList<Student> studentArrayList;
 
-    ArrayList<String> listId = (ArrayList<String>) FileObject.readFromFile(FileObject.FILE_ID) == null ?
-            new ArrayList<>() : (ArrayList<String>) FileObject.readFromFile(FileObject.FILE_ID);
-
     public Management() throws IOException {
         studentArrayList = fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH)) == null ?
                 new ArrayList<>() : fileCSV.swapCSV(fileCSV.reader(fileCSV.FILE_PATH));
@@ -32,6 +29,15 @@ public class Management extends AbsManagement {
     public Student input() throws IOException {
 
         Student newStudent = new Student();
+        System.out.println("Enter the id");
+        boolean checkId = true;
+        do {
+            String id = sc.nextLine();
+            if (onlyId(studentArrayList, id)) {
+                newStudent.setId(id);
+                checkId = false;
+            }
+        } while (checkId);
 
         System.out.println("Enter the name");
         String name = sc.nextLine();
@@ -51,7 +57,6 @@ public class Management extends AbsManagement {
             }
         } while (checkBorn);
 
-
         System.out.println("Enter the address");
         newStudent.setAddress(sc.nextLine());
 
@@ -59,7 +64,7 @@ public class Management extends AbsManagement {
         newStudent.setGender(sc.nextLine());
 
         System.out.println("Enter the email");
-        String regexMail = "^[a-zA-Z0-9]*[\\@]+[a-zA-Z0-9]*[\\.][a-z]*$";
+        String regexMail = "^[a-z0-9]*@[a-z0-9]*[\\.][a-z]*$";
         String email;
         boolean checkMail = true;
         do {
@@ -72,41 +77,23 @@ public class Management extends AbsManagement {
             }
         } while (checkMail);
 
-        System.out.println("Enter the id");
-        boolean checkId = true;
-        do {
-            String id = sc.nextLine();
-            if (onlyId(listId, id)) {
-                newStudent.setId(id);
-                checkId = false;
-            }
-        } while (checkId);
-
         newStudent.setMark(inputMark());
 
         return newStudent;
     }
 
-    public boolean onlyId(ArrayList<String> list, String id) {
-        if (list == null){
-            list.add(id);
-            return true;
-        }else {
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).equals(id)) {
-                    return false;
-                } else {
-                    list.add(id);
-                    return true;
-                }
+    public boolean onlyId(ArrayList<Student> list, String id) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equals(id)) {
+                System.err.println("The id is existed");
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
     public void add(ArrayList<Student> list) throws IOException {
-
         System.out.println("Enter the quantity want to add");
         int quantity = Integer.parseInt(sc.nextLine());
 
